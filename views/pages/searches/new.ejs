@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <form action="/searches/new" method="POST">
+    <fieldset>
+      <input type="text" name="author" placeholder="Please Enter Author Name">
+      <label for="author">Search by Author
+      </label>
+      <input type="radio" id="author" name="author" value="author"><span></span>
+
+      <input type="text" name="title" placeholder="Book Title">
+      <label for="title">Search by title</label>
+      <input type="radio" id="title" name="title" value="title">
+    </fieldset>
+    <button type="submit">Submit</button>
+
+  </form>
+</body>
+
+</html>
