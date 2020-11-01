@@ -7,9 +7,9 @@ const superagent = require('superagent');
 // const pg = require('pg');
 
 
-
 // Environment Variables 
 require('dotenv').config();
+
 
 
 // Setting up application
@@ -37,4 +37,4 @@ app.get('/searches/new',(req, res) => {
 app.listen(PORT, () => {
   console.log(`App Listening on port: ${PORT}`);
 })
-// f
+// update
