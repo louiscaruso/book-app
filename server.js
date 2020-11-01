@@ -16,6 +16,8 @@ require('dotenv').config();
 const app = express();
 app.set('view engine', 'ejs');
 
+app.use(express.urlencoded({extended:true}))
+
 // Declare port for server
 const PORT = process.env.PORT || 3000;
 // Use CORS (cross origin resource sharing)
@@ -24,15 +26,50 @@ const cors = require('cors');
 // Creating postgres client 
 
 
+
+
 // Route 
 app.get('/', (req, res) => {
   res.send('Hello !');
+})
+
+app.post('/searches', (req, res) => {
+  console.log(req.body);
+  
+  let URL = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.searchType}:${req.body.searchQuery}&maxResults=10`;
+  superagent.get(URL)
+    .then(data => {
+
+    })
 })
 
 app.get('/searches/new',(req, res) => {
   
   res.render('pages/searches/new');
 })
+
+
+//Book COnstrutor
+
+function Book(book){
+  this.title = book.title ? book.title : 'no title found';
+  this.description = book.description ? book.description : 'no description found';
+  this.authors = book.authors ? book.authors[0] : 'no author found';
+  this.isbn = book.industryIdentifiers; 
+}  
+
+
+
+
+
+
+// Handlers 
+const book = results.body.items.map()
+
+
+
+
+
 
 app.listen(PORT, () => {
   console.log(`App Listening on port: ${PORT}`);
