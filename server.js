@@ -3,6 +3,7 @@
 // Bring in dependencies
 const express = require('express');
 const superagent = require('superagent');
+const cors = require('cors');
 // console.log('error');
 // const pg = require('pg');
 
@@ -23,8 +24,8 @@ app.use(express.urlencoded({ extended: true }));
 // Declare port for server
 const PORT = process.env.PORT || 3000;
 // Use CORS (cross origin resource sharing)
-const cors = require('cors');
 
+app.use(express.static('./public'));
 // Creating postgres client
 
 
@@ -39,8 +40,10 @@ app.post('/searches', (req, res) => {
   console.log(req.body);
 
   let URL = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.searchType}:${req.body.searchQuery}&maxResults=10`;
-  superagent.get(URL)
+  superagent.get(URL);
+  console.log('URL', URL)
     .then(data => {
+
 
     });
 });
@@ -51,7 +54,7 @@ app.get('/searches/new', (req, res) => {
 });
 
 
-//Book COnstrutor
+//Book Construtor
 
 function Book(book) {
   this.title = book.title ? book.title : 'no title found';
@@ -70,7 +73,7 @@ function Book(book) {
 
 
 // Handlers 
-const book = results.body.items.map();
+//const book = results.body.items.map();
 
 
 
