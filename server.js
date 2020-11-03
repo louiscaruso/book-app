@@ -18,7 +18,7 @@ require('dotenv').config();
 const app = express();
 app.use(cors());
 app.set('view engine', 'ejs');
-
+app.post('/searches');
 app.use(express.urlencoded({ extended: true }));
 
 // Declare port for server
@@ -34,16 +34,16 @@ app.use(express.static('./public'));
 // Route
 app.get('/', (req, res) => {
   res.send('Hello !');
-})
+});
 
 app.post('/searches', (req, res) => {
   console.log(req.body);
-
+  
   let URL = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.searchType}:${req.body.searchQuery}&maxResults=10`;
-  superagent.get(URL);
   console.log('URL', URL)
+  superagent.get(URL)
     .then(data => {
-
+      console.log(data.body);
 
     });
 });
@@ -62,7 +62,7 @@ function Book(book) {
   this.authors = book.authors ? book.authors[0] : 'no author found';
   this.isbn = book.industryIdentifiers;
   //splice method
-  book.splice(1,5,'s');
+  book.splice(1, 5, 's');
   console.log('url', URL);
 
 }
@@ -73,7 +73,7 @@ function Book(book) {
 
 
 // Handlers 
-//const book = results.body.items.map();
+//const book = data.body.items.map();
 
 
 
