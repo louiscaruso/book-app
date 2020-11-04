@@ -1,0 +1,27 @@
+form{
+  padding: 10px;
+}
+
+fieldset{
+  padding:5px;
+}
+
+input{
+  background-color: lightgray;
+}
+
+button{
+  background-color:darkgray;
+}
+
+main{
+  justify-content: center;
+  align-items: center;
+}
+
+@media only screen and (min-width: 768px){
+  body{
+    background-color: purple;
+  }
+}
+

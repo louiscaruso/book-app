@@ -38,12 +38,17 @@ app.get('/', (req, res) => {
 
 app.post('/searches', (req, res) => {
   console.log(req.body);
-  
+
   let URL = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.searchType}:${req.body.searchQuery}&maxResults=10`;
   console.log('URL', URL)
   superagent.get(URL)
     .then(data => {
       console.log(data.body);
+      const book = data.body.items.map(books => {
+        return new Book (books);
+
+
+      });
 
     });
 });
@@ -73,7 +78,8 @@ function Book(book) {
 
 
 // Handlers 
-//const book = data.body.items.map();
+
+
 
 
 
