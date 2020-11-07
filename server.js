@@ -1,17 +1,18 @@
 'use strict';
 
-// Bring in dependencies
-const express = require('express');
-const superagent = require('superagent');
-const cors = require('cors');
-// console.log('error');
-// const pg = require('pg');
-
-
 // Environment Variables 
 
 require('dotenv').config();
 
+// Bring in dependencies
+const express = require('express');
+const app = express();
+require('ejs');
+const superagent = require('superagent');
+const pg = require('pg');
+const cors = require('cors');
+// console.log('error');
+// const pg = require('pg');
 
 
 // Setting up application
