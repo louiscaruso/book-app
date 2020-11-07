@@ -1,7 +1,7 @@
 'use strict';
 
 // Environment Variables 
-
+// Dot
 require('dotenv').config();
 
 // Bring in dependencies
@@ -11,6 +11,7 @@ require('ejs');
 const superagent = require('superagent');
 const pg = require('pg');
 const cors = require('cors');
+const { response } = require('express');
 // console.log('error');
 // const pg = require('pg');
 
@@ -44,15 +45,13 @@ app.post('/searches', (req, res) => {
   console.log('URL', URL)
   superagent.get(URL)
     .then(data => {
-      console.log(data.body);
-      const book = data.body.items.map(books => {
-        return new Book (books);
-
-
-      });
-
-    });
-});
+      console.log(data.body.items[2]);
+      const book = data.body.items;
+      const finalBookArray = finalBookArray.map(books => new Book(book.volumeInfo));
+      response.render('pages/searches/show', { renderContent: finalBookArray });
+      return new Book(books);
+    })
+}
 
 app.get('/searches/new', (req, res) => {
 
