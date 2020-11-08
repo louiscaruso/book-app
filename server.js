@@ -17,7 +17,6 @@ const { response } = require('express');
 
 
 // Setting up application
-const app = express();
 app.use(cors());
 app.set('view engine', 'ejs');
 app.post('/searches');
@@ -50,10 +49,11 @@ app.post('/searches', (req, res) => {
       const finalBookArray = finalBookArray.map(books => new Book(book.volumeInfo));
       response.render('pages/searches/show', { renderContent: finalBookArray });
       return new Book(books);
-    })
+    });
 }
 
-app.get('/searches/new', (req, res) => {
+
+app.get('/searches/new', (req, res => {
 
   res.render('pages/searches/new');
 });
