@@ -1,7 +1,7 @@
 'use strict';
 
-// Environment Variables 
-// Dot
+// Environment Variables
+// Dotenav
 require('dotenv').config();
 
 // Bring in dependencies
@@ -12,14 +12,16 @@ const superagent = require('superagent');
 const pg = require('pg');
 const cors = require('cors');
 const { response } = require('express');
+
 // console.log('error');
-// const pg = require('pg');
+//const pg = require('pg');
 
 
 // Setting up application
+
 app.use(cors());
 app.set('view engine', 'ejs');
-app.post('/searches');
+
 app.use(express.urlencoded({ extended: true }));
 
 // Declare port for server
@@ -31,21 +33,41 @@ app.use(express.static('./public'));
 
 
 
-
 // Route
+
 app.get('/', (req, res) => {
   res.send('Hello !');
 });
-
 app.post('/searches', (req, res) => {
   console.log(req.body);
 
+  app.get('/searches/new', (req, res) => {
+
+    res.render('views/pages/pages/searches/new');
+  });
+  app.get('/', renderHome);
+  //app.get('/searchform', renderSearchForm);
+  //app.post('/ searches', collectFormInformation);
+
+
+  //function collectFormInformation(request, response) {
+   // console.log(request.body);
+   // const searchQuery = request.body.search[0];
+   // const searchType = request.body.search[1];
+    //console.log(request.body);
+  //}
   let URL = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.searchType}:${req.body.searchQuery}&maxResults=10`;
-  console.log('URL', URL)
+  console.log('URL', URL);
+
+ // if (searchType === 'title') { url += `+intitle:${searchQuery}`}
+  //if (searchType === 'author') { url += `+inauthor:${searchQuery}`}
+
+
   superagent.get(URL)
     .then(data => {
       console.log(data.body.items[2]);
       const book = data.body.items;
+
       const finalBookArray = finalBookArray.map(books => new Book(book.volumeInfo));
       response.render('pages/searches/show', { renderContent: finalBookArray });
       return new Book(books);
@@ -56,8 +78,25 @@ app.post('/searches', (req, res) => {
 app.get('/searches/new', (req, res => {
 
   res.render('pages/searches/new');
+
 });
 
+function renderHome(req, res) {
+  console.log('now you are in Render Home');
+  const sql = 'SELECT * FROM booktable;';
+  return client.query(sql)
+    .then(results => {
+      console.log(results.rows);
+      res.status(200).render('views/pages/pages/index', { renderContent: allbooks });
+    })
+    .catch(error => {
+      console.log(error);
+      res.render('views/pages/pages/error');
+    });
+}
+
+//client.query)sql, safeValues);
+//response.status(200).redirect('/books/${id}');
 
 //Book Construtor
 
@@ -67,17 +106,28 @@ function Book(book) {
   this.authors = book.authors ? book.authors[0] : 'no author found';
   this.isbn = book.industryIdentifiers;
   //splice method
-  book.splice(1, 5, 's');
+  //
   console.log('url', URL);
 
 }
 
 
+function handleError(req, res) {
+  res.status(404).render('view/pages/pages/error');
+}
+
+client.connect()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`App Listening on port: ${PORT}`);
+    });
+  });
 
 
 
 
-// Handlers 
+
+// Handlers
 
 
 
@@ -86,7 +136,5 @@ function Book(book) {
 
 
 
-app.listen(PORT, () => {
-  console.log(`App Listening on port: ${PORT}`);
-});
+//handleError();
 // update
