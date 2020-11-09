@@ -35,17 +35,17 @@ const client = new pg.Client(process.env.DATABASE_URL);
 
 // Route
 
-app.get('/', (req, res) => {
-  res.send('Hello !');
-});
-app.post('/searches', (req, res) => {
-  console.log(req.body);
+// app.get('/', (req, res) => {
+//   res.send('Hello !');
+// });
+// app.post('/searches', (req, res) => {
+//   console.log(req.body);
 
-  app.get('/searches/new', (req, res) => {
+//   app.get('/searches/new', (req, res) => {
 
-    res.render('views/pages/pages/searches/new');
-  });
-  app.get('/', renderHome);
+//     res.render('views/pages/pages/searches/new');
+//   });
+//   app.get('/', renderHome);
   //app.get('/searchform', renderSearchForm);
   //app.post('/ searches', collectFormInformation);
 
@@ -72,56 +72,56 @@ app.post('/searches', (req, res) => {
       response.render('pages/searches/show', { renderContent: finalBookArray });
       return new Book(books);
     });
-}
 
 
-app.get('/searches/new', (req, res => {
 
-  res.render('pages/searches/new');
+// app.get('/searches/new', (req, res => {
 
-});
+//   res.render('pages/searches/new');
 
-function renderHome(req, res) {
-  console.log('now you are in Render Home');
-  const sql = 'SELECT * FROM booktable;';
-  return client.query(sql)
-    .then(results => {
-      console.log(results.rows);
-      res.status(200).render('views/pages/pages/index', { renderContent: allbooks });
-    })
-    .catch(error => {
-      console.log(error);
-      res.render('views/pages/pages/error');
-    });
-}
+// });
+
+// function renderHome(req, res) {
+//   console.log('now you are in Render Home');
+//   const sql = 'SELECT * FROM booktable;';
+//   return client.query(sql)
+//     .then(results => {
+//       console.log(results.rows);
+//       res.status(200).render('views/pages/pages/index', { renderContent: allbooks });
+//     })
+//     .catch(error => {
+//       console.log(error);
+//       res.render('views/pages/pages/error');
+//     });
+// }
 
 //client.query)sql, safeValues);
 //response.status(200).redirect('/books/${id}');
 
 //Book Construtor
 
-function Book(book) {
-  this.title = book.title ? book.title : 'no title found';
-  this.description = book.description ? book.description : 'no description found';
-  this.authors = book.authors ? book.authors[0] : 'no author found';
-  this.isbn = book.industryIdentifiers;
-  //splice method
-  //
-  console.log('url', URL);
+// function Book(book) {
+//   this.title = book.title ? book.title : 'no title found';
+//   this.description = book.description ? book.description : 'no description found';
+//   this.authors = book.authors ? book.authors[0] : 'no author found';
+//   this.isbn = book.industryIdentifiers;
+//   //splice method
+//   //
+//   console.log('url', URL);
 
-}
+// }
 
 
-function handleError(req, res) {
-  res.status(404).render('view/pages/pages/error');
-}
+// function handleError(req, res) {
+//   res.status(404).render('view/pages/pages/error');
+// }
 
-client.connect()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`App Listening on port: ${PORT}`);
-    });
-  });
+// client.connect()
+//   .then(() => {
+//     app.listen(PORT, () => {
+//       console.log(`App Listening on port: ${PORT}`);
+//     });
+//   });
 
 
 
