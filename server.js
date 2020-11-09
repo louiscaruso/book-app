@@ -41,9 +41,7 @@ app.get('/', (req, res) => {
   res.send('Hello !');
 });
 
-app.post('/searches', (req, res) => {
-  console.log(req.body);
-})
+app.post('/searches', collectFormInformation);
 
 app.get('/searches/new', (req, res) => {
    console.log('/searches/new');
@@ -55,19 +53,20 @@ app.get('/', renderHome);
   //app.post('/ searches', collectFormInformation);
 
 
-  function collectFormInformation(req, resp) {
+function collectFormInformation(req, resp) {
    console.log(req.body);
-   const searchQuery = req.body.search[0];
-  const searchType = req.body.search[1];
+   const searchQuery = req.body.searchQuery;
+  const searchType = req.body.searchType;
   console.log(req.body);
-  }
-  let URL = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.searchType}:${req.body.searchQuery}&maxResults=10`;
+  
+
+  let URL = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.searchType}:${req.body.searchQuery}`;
+  
+
+  if (searchType === 'title') { URL += `+intitle:${searchQuery};`}
+  if (searchType === 'author') { URL += `+inauthor:${searchQuery};`}
+
   console.log('URL', URL);
-
-  if (searchType === 'title') { URL += `+intitle:${searchQuery}`;}
-  if (searchType === 'author') { URL += `+inauthor:${searchQuery}`;}
-
-
   superagent.get(URL)
     .then(data => {
       console.log(data.body.items[2]);
@@ -80,7 +79,7 @@ app.get('/', renderHome);
       console.log(error);
       res.send('views/pages/pages/error');
     });
-}
+
 
 function renderHome(req, res) {
   console.log('now you are in Render Home');
