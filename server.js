@@ -42,26 +42,28 @@ app.get('/', (req, res) => {
 });
 app.post('/searches', (req, res) => {
   console.log(req.body);
+})
 
-  app.get('/searches/new', (req, res) => {
+app.get('/searches/new', (req, res) => {
+   console.log('/searches/new');
+  res.render('pages/searches/new');
+ });
 
-    res.render('views/pages/pages/searches/new');
-  });
-  app.get('/', renderHome);
+app.get('/', renderHome);
   //app.get('/searchform', renderSearchForm);
   //app.post('/ searches', collectFormInformation);
 
 
   //function collectFormInformation(request, response) {
-   // console.log(request.body);
-   // const searchQuery = request.body.search[0];
-   // const searchType = request.body.search[1];
-    //console.log(request.body);
+  // console.log(request.body);
+  // const searchQuery = request.body.search[0];
+  // const searchType = request.body.search[1];
+  //console.log(request.body);
   //}
   let URL = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.searchType}:${req.body.searchQuery}&maxResults=10`;
   console.log('URL', URL);
 
- // if (searchType === 'title') { url += `+intitle:${searchQuery}`}
+  // if (searchType === 'title') { url += `+intitle:${searchQuery}`}
   //if (searchType === 'author') { url += `+inauthor:${searchQuery}`}
 
 
