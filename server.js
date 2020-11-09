@@ -10,6 +10,7 @@ const app = express();
 require('ejs');
 const superagent = require('superagent');
 const pg = require('pg');
+const methodOverride = require('method-override');
 const cors = require('cors');
 const { response } = require('express');
 
