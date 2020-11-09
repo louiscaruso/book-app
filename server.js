@@ -40,6 +40,7 @@ const client = new pg.Client(process.env.DATABASE_URL);
 app.get('/', (req, res) => {
   res.send('Hello !');
 });
+
 app.post('/searches', (req, res) => {
   console.log(req.body);
 })
@@ -54,17 +55,17 @@ app.get('/', renderHome);
   //app.post('/ searches', collectFormInformation);
 
 
-  //function collectFormInformation(request, response) {
-  // console.log(request.body);
-  // const searchQuery = request.body.search[0];
-  // const searchType = request.body.search[1];
-  //console.log(request.body);
-  //}
+  function collectFormInformation(req, resp) {
+   console.log(req.body);
+   const searchQuery = req.body.search[0];
+  const searchType = req.body.search[1];
+  console.log(req.body);
+  }
   let URL = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.searchType}:${req.body.searchQuery}&maxResults=10`;
   console.log('URL', URL);
 
-  // if (searchType === 'title') { url += `+intitle:${searchQuery}`}
-  //if (searchType === 'author') { url += `+inauthor:${searchQuery}`}
+  if (searchType === 'title') { URL += `+intitle:${searchQuery}`;}
+  if (searchType === 'author') { URL += `+inauthor:${searchQuery}`;}
 
 
   superagent.get(URL)
@@ -79,7 +80,7 @@ app.get('/', renderHome);
       console.log(error);
       res.send('views/pages/pages/error');
     });
-});
+}
 
 function renderHome(req, res) {
   console.log('now you are in Render Home');
