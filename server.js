@@ -54,22 +54,53 @@ function renderHome(req, res) {
     })
 }
 
-function updateOneBook(req, res){
+function updateOneBook(req, res) {
   const id = req.params.book_id;
-  const {authors, title, isbn, image, description} = req.body;
+  const { authors, title, isbn, image, description } = req.body;
   let sql = 'UPDATE booktable SET author=$1, title=$2, isbn=$3, image_url=$4, description=$5 WHERE id=$6;';
   let safeValues = [authors, title, isbn, image, description, id];
-  client.query(sql,safeValues);
+  client.query(sql, safeValues);
   response.status(200).redirect(`/books/${id}`);
 
 }
 
 function deletBook(request, response) {
-  const id = request.params.book-id;
+  const id = request.params.book - id;
   let sql = 'DELETE FROM booktable WHERE id=$1;';
   let safeValues = [id];
   client.query(sql, safeValues);
   response.status(200).redirect('/');
+}
+
+function getOneBook(req, res) {
+  const id = req.params.book_id;
+  console.log('in the one book function', id);
+  const sql = 'SELECT * FROM booktable WHERE id=$1;';
+  const safeValues = [id];
+  client.query(sql, safeValues)
+    .then((results) => {
+      console.log(reults);
+      const myFavBook = result.rows[0];
+      response.render('pages/books/detail', { value: myFavBook });
+    });
+}
+
+function renderSearchForm(req, res) {
+  res.render('pages/searches/new.ejs');
+}
+
+function addBookToDatabase(req, res) {
+  const { authors, title, isbn, image, description } = req.body;
+  const sql = 'INSERT INTO booktable (author, title, isbn, image_url, description) VALUES ($1,$2,$3,$4,$5) RETURNING id;';
+  const safeValues = [authors, title, isbn, image, description];
+  client.query(sql, safeValues)
+    .then((idFromSQL) => {
+      console.log(idFromSQL);
+      res.redirect(`books/${idFromSQL.rows[0].id}`)
+    }).catch((error) => {
+      console.log(error);
+      res.render('pages/error');
+    });
 }
 
 function collectFormInformation(req, resp) {
@@ -81,7 +112,7 @@ function collectFormInformation(req, resp) {
   if (searchType === 'title') { URL += `+intitle:${searchQuery};` }
   if (searchType === 'author') { URL += `+inauthor:${searchQuery};` }
   console.log('URL', URL);
-  
+
   superagent.get(URL)
     .then(data => {
       console.log(data.body.items[1]);
