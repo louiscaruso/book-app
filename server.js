@@ -64,7 +64,13 @@ function updateOneBook(req, res){
 
 }
 
-
+function deletBook(request, response) {
+  const id = request.params.book-id;
+  let sql = 'DELETE FROM booktable WHERE id=$1;';
+  let safeValues = [id];
+  client.query(sql, safeValues);
+  response.status(200).redirect('/');
+}
 
 function collectFormInformation(req, resp) {
   console.log(req.body);
