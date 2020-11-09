@@ -9,10 +9,14 @@
 
 <body>
   <main>
+    <section>
     <ul>
-      <%renderContent.forEach(book => { %>
-      <li><img src="<%= book.image %>" alt="<%= book.title %>" <p id="title"> <%= book.title %> </p>
-        <p id="author"><%= book.authors %> </p>
+      <% renderContent.forEach(book => { %>
+    
+      <li>
+        
+        <h2><%= book.title %></h2>
+        <p><%= book.authors %> </p>
         <p><%= book.description %></p>
       </li>
       <form id="addtoCollection" action="/books" method="post">
@@ -32,6 +36,9 @@
 
 
     </ul>
+
+  </section>
+
   </main>
 
   <footer>

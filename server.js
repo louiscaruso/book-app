@@ -69,7 +69,7 @@ function collectFormInformation(req, resp) {
   console.log('URL', URL);
   superagent.get(URL)
     .then(data => {
-      console.log(data.body.items[2]);
+      console.log(data.body.items[1]);
       const book = data.body.items;
       const finalBookArray = book.map(books => new Book(books.volumeInfo));
       res.render('pages/searches/show', { renderContent: finalBookArray });
