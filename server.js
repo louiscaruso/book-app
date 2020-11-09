@@ -117,13 +117,19 @@ function collectFormInformation(req, resp) {
     .then(data => {
       console.log(data.body.items[1]);
       const book = data.body.items;
-      const finalBookArray = book.map(books => new Book(books.volumeInfo));
-      res.render('pages/searches/show', { renderContent: finalBookArray });
-    })
-    .catch(error => {
-      console.log(error);
-      res.send('views/pages/pages/error');
+      const finalBookArray = finalBookArray.map(books => new Book(book.volumeInfo));
+      response.render('pages/searches/show', { renderContent: finalBookArray });
+      return new Book(books);
     });
+
+}
+
+
+app.get('/searches/new', (req, res => {
+
+  res.render('pages/searches/new');
+
+});
 
 
 
