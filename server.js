@@ -29,7 +29,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.static('./public'));
 // Creating postgres client
-
+const client = new pg.Client(process.env.DATABASE_URL);
 
 
 
