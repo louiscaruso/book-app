@@ -10,6 +10,7 @@ const app = express();
 require('ejs');
 const superagent = require('superagent');
 const pg = require('pg');
+const methodOverride = require('method-override');
 const cors = require('cors');
 const { response } = require('express');
 
@@ -46,26 +47,39 @@ const client = new pg.Client(process.env.DATABASE_URL);
 //     res.render('views/pages/pages/searches/new');
 //   });
 //   app.get('/', renderHome);
+app.get('/', (req, res) => {
+  res.send('Hello !');
+});
+
+app.post('/searches', collectFormInformation);
+
+app.get('/searches/new', (req, res) => {
+   console.log('/searches/new');
+  res.render('pages/searches/new');
+ });
+
+app.get('/', renderHome);
   //app.get('/searchform', renderSearchForm);
   //app.post('/ searches', collectFormInformation);
 
 
-  //function collectFormInformation(request, response) {
-   // console.log(request.body);
-   // const searchQuery = request.body.search[0];
-   // const searchType = request.body.search[1];
-    //console.log(request.body);
-  //}
-  let URL = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.searchType}:${req.body.searchQuery}&maxResults=10`;
+function collectFormInformation(req, resp) {
+   console.log(req.body);
+   const searchQuery = req.body.searchQuery;
+  const searchType = req.body.searchType;
+  console.log(req.body);
+  
+
+  let URL = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.searchType}:${req.body.searchQuery}`;
+  
+
+  if (searchType === 'title') { URL += `+intitle:${searchQuery};`}
+  if (searchType === 'author') { URL += `+inauthor:${searchQuery};`}
+
   console.log('URL', URL);
-
- // if (searchType === 'title') { url += `+intitle:${searchQuery}`}
-  //if (searchType === 'author') { url += `+inauthor:${searchQuery}`}
-
-
   superagent.get(URL)
     .then(data => {
-      console.log(data.body.items[2]);
+      console.log(data.body.items[1]);
       const book = data.body.items;
 
       const finalBookArray = finalBookArray.map(books => new Book(book.volumeInfo));
@@ -73,27 +87,28 @@ const client = new pg.Client(process.env.DATABASE_URL);
       return new Book(books);
     });
 
+}
+
 
 
 // app.get('/searches/new', (req, res => {
 
 //   res.render('pages/searches/new');
 
-// });
 
-// function renderHome(req, res) {
-//   console.log('now you are in Render Home');
-//   const sql = 'SELECT * FROM booktable;';
-//   return client.query(sql)
-//     .then(results => {
-//       console.log(results.rows);
-//       res.status(200).render('views/pages/pages/index', { renderContent: allbooks });
-//     })
-//     .catch(error => {
-//       console.log(error);
-//       res.render('views/pages/pages/error');
-//     });
-// }
+function renderHome(req, res) {
+  console.log('now you are in Render Home');
+  const sql = 'SELECT * FROM booktable;';
+  return client.query(sql)
+    .then(results => {
+      console.log(results.rows);
+      res.status(200).render('views/pages/pages/index', { renderContent: allbooks });
+    })
+    .catch(error => {
+      console.log(error);
+      res.render('views/pages/pages/error');
+    });
+}
 
 //client.query)sql, safeValues);
 //response.status(200).redirect('/books/${id}');
@@ -112,9 +127,11 @@ const client = new pg.Client(process.env.DATABASE_URL);
 // }
 
 
-// function handleError(req, res) {
-//   res.status(404).render('view/pages/pages/error');
-// }
+
+
+function handleError(req, res) {
+  res.status(404).render('view/pages/pages/error');
+}
 
 // client.connect()
 //   .then(() => {
