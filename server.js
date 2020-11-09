@@ -10,6 +10,7 @@ const app = express();
 require('ejs');
 const superagent = require('superagent');
 const pg = require('pg');
+const methodOverride = require('method-override');
 const cors = require('cors');
 const { response } = require('express');
 
@@ -31,6 +32,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static('./public'));
 // Creating postgres client
 
+const client = new pg.Client(process.env.DATABASE_URL);
 
 
 // Route
@@ -38,40 +40,43 @@ app.use(express.static('./public'));
 app.get('/', (req, res) => {
   res.send('Hello !');
 });
-app.post('/searches', (req, res) => {
-  console.log(req.body);
 
-  app.get('/searches/new', (req, res) => {
+app.post('/searches', collectFormInformation);
 
-    res.render('views/pages/pages/searches/new');
-  });
-  app.get('/', renderHome);
+app.get('/searches/new', (req, res) => {
+   console.log('/searches/new');
+  res.render('pages/searches/new');
+ });
+
+app.get('/', renderHome);
   //app.get('/searchform', renderSearchForm);
   //app.post('/ searches', collectFormInformation);
 
 
-  //function collectFormInformation(request, response) {
-   // console.log(request.body);
-   // const searchQuery = request.body.search[0];
-   // const searchType = request.body.search[1];
-    //console.log(request.body);
-  //}
-  let URL = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.searchType}:${req.body.searchQuery}&maxResults=10`;
+function collectFormInformation(req, resp) {
+   console.log(req.body);
+   const searchQuery = req.body.searchQuery;
+  const searchType = req.body.searchType;
+  console.log(req.body);
+  
+
+  let URL = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.searchType}:${req.body.searchQuery}`;
+  
+
+  if (searchType === 'title') { URL += `+intitle:${searchQuery};`}
+  if (searchType === 'author') { URL += `+inauthor:${searchQuery};`}
+
   console.log('URL', URL);
-
- // if (searchType === 'title') { url += `+intitle:${searchQuery}`}
-  //if (searchType === 'author') { url += `+inauthor:${searchQuery}`}
-
-
   superagent.get(URL)
     .then(data => {
-      console.log(data.body.items[2]);
+      console.log(data.body.items[1]);
       const book = data.body.items;
 
       const finalBookArray = finalBookArray.map(books => new Book(book.volumeInfo));
       response.render('pages/searches/show', { renderContent: finalBookArray });
       return new Book(books);
     });
+
 }
 
 
@@ -80,6 +85,7 @@ app.get('/searches/new', (req, res => {
   res.render('pages/searches/new');
 
 });
+
 
 function renderHome(req, res) {
   console.log('now you are in Render Home');
@@ -110,6 +116,8 @@ function Book(book) {
   console.log('url', URL);
 
 }
+
+
 
 
 function handleError(req, res) {
