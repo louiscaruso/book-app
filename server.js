@@ -19,6 +19,7 @@ const { response } = require('express');
 
 
 // Setting up application
+app.use(cors());
 app.set('view engine', 'ejs');
 
 app.use(express.strict('/public'));
@@ -30,9 +31,10 @@ app.use(methodOverride('_method'));
 // Declare port for server
 const PORT = process.env.PORT || 3000;
 
+app.use(express.static('./public'));
+
 // Creating postgres client
 const client = new pg.Client(process.env.DATABASE_URL);
-
 
 // Route
 
@@ -43,6 +45,7 @@ app.post('/books', addBooksToDatabase);
 app.get('/books/:book_id', getOneBook);
 app.delete('/update/:book_id', deleteBook);
 app.get('*', handleError);
+
 
 function renderHome(req, res) {
   console.log('render home')
@@ -125,11 +128,10 @@ function collectFormInformation(req, resp) {
 }
 
 
-app.get('/searches/new', (req, res => {
 
-  res.render('pages/searches/new');
+// app.get('/searches/new', (req, res => {
 
-});
+//   res.render('pages/searches/new');
 
 
 
@@ -137,6 +139,7 @@ app.get('/searches/new', (req, res => {
   //response.status(200).redirect('/books/${id}');
 
   //Book Construtor
+
 
   function Book(book) {
     this.title = book.title ? book.title : 'no title found';
@@ -148,7 +151,6 @@ app.get('/searches/new', (req, res => {
     console.log('url', URL);
 
   }
-
 
 
 
