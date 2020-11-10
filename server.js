@@ -19,7 +19,6 @@ const { response } = require('express');
 
 
 // Setting up application
-
 app.use(cors());
 app.set('view engine', 'ejs');
 
@@ -30,13 +29,24 @@ const PORT = process.env.PORT || 3000;
 // Use CORS (cross origin resource sharing)
 
 app.use(express.static('./public'));
-// Creating postgres client
 
+// Creating postgres client
 const client = new pg.Client(process.env.DATABASE_URL);
 
 
 // Route
 
+// app.get('/', (req, res) => {
+//   res.send('Hello !');
+// });
+// app.post('/searches', (req, res) => {
+//   console.log(req.body);
+
+//   app.get('/searches/new', (req, res) => {
+
+//     res.render('views/pages/pages/searches/new');
+//   });
+//   app.get('/', renderHome);
 app.get('/', (req, res) => {
   res.send('Hello !');
 });
@@ -80,11 +90,10 @@ function collectFormInformation(req, resp) {
 }
 
 
-app.get('/searches/new', (req, res => {
 
-  res.render('pages/searches/new');
+// app.get('/searches/new', (req, res => {
 
-});
+//   res.render('pages/searches/new');
 
 
 function renderHome(req, res) {
@@ -106,16 +115,16 @@ function renderHome(req, res) {
 
 //Book Construtor
 
-function Book(book) {
-  this.title = book.title ? book.title : 'no title found';
-  this.description = book.description ? book.description : 'no description found';
-  this.authors = book.authors ? book.authors[0] : 'no author found';
-  this.isbn = book.industryIdentifiers;
-  //splice method
-  //
-  console.log('url', URL);
+// function Book(book) {
+//   this.title = book.title ? book.title : 'no title found';
+//   this.description = book.description ? book.description : 'no description found';
+//   this.authors = book.authors ? book.authors[0] : 'no author found';
+//   this.isbn = book.industryIdentifiers;
+//   //splice method
+//   //
+//   console.log('url', URL);
 
-}
+// }
 
 
 
