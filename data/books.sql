@@ -9,3 +9,4 @@ CREATE TABLE booktable (
   description TEXT
 
 );
+-- psql -f data/books.sql -d book
