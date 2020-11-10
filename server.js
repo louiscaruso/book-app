@@ -133,12 +133,12 @@ function handleError(req, res) {
   res.status(404).render('view/pages/pages/error');
 }
 
-// client.connect()
-//   .then(() => {
-//     app.listen(PORT, () => {
-//       console.log(`App Listening on port: ${PORT}`);
-//     });
-//   });
+client.connect()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`App Listening on port: ${PORT}`);
+    });
+  });
 
 
 
