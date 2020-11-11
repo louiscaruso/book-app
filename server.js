@@ -31,7 +31,6 @@ app.use(methodOverride('_method'));
 const PORT = process.env.PORT || 3000;
 
 
-
 // Creating postgres client
 const client = new pg.Client(process.env.DATABASE_URL);
 
@@ -40,7 +39,7 @@ const client = new pg.Client(process.env.DATABASE_URL);
 app.get('/', renderHome);
 app.get('/searchform', renderSearchForm);
 app.post('/ searches', collectFormInformation);
-app.post('/books', addBooksToDatabase);
+app.post('/books', addBookToDatabase);
 app.get('/books/:book_id', getOneBook);
 app.delete('/update/:book_id', deleteBook);
 app.get('*', handleError);
@@ -51,22 +50,28 @@ function renderHome(req, res) {
   const sql = 'SELECT * FROM booktable;';
   return client.query(sql)
     .then(results => {
-      console.log(reults.rows);
+      console.log(results.rows);
       res.status(200).render('pages/index', { renderedContent: allbook });
     })
+    .catch((error) => {
+      console.log(error);
+      res.render('pages/error');
+    });
 }
 
-function updateOneBook(req, res) {
-  const id = req.params.book_id;
-  const { authors, title, isbn, image, description } = req.body;
-  let sql = 'UPDATE booktable SET author=$1, title=$2, isbn=$3, image_url=$4, description=$5 WHERE id=$6;';
-  let safeValues = [authors, title, isbn, image, description, id];
-  client.query(sql, safeValues);
-  response.status(200).redirect(`/books/${id}`);
 
-}
+// function updateOneBook(req, res) {
+//   const id = req.params.book_id;
+//   const { authors, title, isbn, image, description } = req.body;
+//   let sql = 'UPDATE booktable SET author=$1, title=$2, isbn=$3, image_url=$4,
+// description=$5 WHERE id=$6;';
+//   let safeValues = [authors, title, isbn, image, description, id];
+//   client.query(sql, safeValues);
+//   response.status(200).redirect(`/books/${id}`);
 
-function deletBook(request, response) {
+// }
+
+function deleteBook(request, response) {
   const id = request.params.book - id;
   let sql = 'DELETE FROM booktable WHERE id=$1;';
   let safeValues = [id];
@@ -81,11 +86,16 @@ function getOneBook(req, res) {
   const safeValues = [id];
   client.query(sql, safeValues)
     .then((results) => {
-      console.log(reults);
-      const myFavBook = result.rows[0];
+      console.log(results);
+      const myFavBook = results.rows[0];
       response.render('pages/books/detail', { value: myFavBook });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.render('pages/error');
     });
 }
+
 
 function renderSearchForm(req, res) {
   res.render('pages/searches/new.ejs');
@@ -98,7 +108,7 @@ function addBookToDatabase(req, res) {
   client.query(sql, safeValues)
     .then((idFromSQL) => {
       console.log(idFromSQL);
-      res.redirect(`books/${idFromSQL.rows[0].id}`)
+      res.redirect(`books/${idFromSQL.rows[0].id}`);
     }).catch((error) => {
       console.log(error);
       res.render('pages/error');
@@ -111,8 +121,8 @@ function collectFormInformation(req, res) {
   const searchType = req.body.searchType;
   console.log(req.body);
   let URL = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.searchType}:${req.body.searchQuery}`;
-  if (searchType === 'title') { URL += `+intitle:${searchQuery};` }
-  if (searchType === 'author') { URL += `+inauthor:${searchQuery};` }
+  if (searchType === 'title') { URL += `+intitle:${searchQuery}`; }
+  if (searchType === 'author') { URL += `+inauthor:${searchQuery}`; }
   console.log('URL', URL);
 
   superagent.get(URL)
@@ -127,29 +137,21 @@ function collectFormInformation(req, res) {
 }
 
 
+//client.query)sql, safeValues);
+//response.status(200).redirect('/books/${id}');
 
-// app.get('/searches/new', (req, res => {
+//Book Construtor
 
-//   res.render('pages/searches/new');
+function Book(book) {
+  this.title = book.title ? book.title : 'no title found';
+  this.description = book.description ? book.description : 'no description found';
+  this.authors = book.authors ? book.authors[0] : 'no author found';
+  this.isbn = book.industryIdentifiers;
+  //splice method
+  //
+  console.log('url', URL);
+}
 
-
-
-  //client.query)sql, safeValues);
-  //response.status(200).redirect('/books/${id}');
-
-  //Book Construtor
-
-
-  function Book(book) {
-    this.title = book.title ? book.title : 'no title found';
-    this.description = book.description ? book.description : 'no description found';
-    this.authors = book.authors ? book.authors[0] : 'no author found';
-    this.isbn = book.industryIdentifiers;
-    //splice method
-    //
-    console.log('url', URL);
-
-  }
 
 
 
@@ -157,14 +159,16 @@ function collectFormInformation(req, res) {
     res.status(404).render('view/pages/pages/error');
   }
 
-  client.connect()
-    .then(() => {
-      app.listen(PORT, () => {
-        console.log(`App Listening on port: ${PORT}`);
-      });
+
+client.connect()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`App Listening on port: ${PORT}`);
     });
-
-
+  })
+  .catch(error => {
+    console.log(error);
+  });
 
 
 
@@ -178,4 +182,3 @@ function collectFormInformation(req, res) {
 
 
 //handleError();
-// update
