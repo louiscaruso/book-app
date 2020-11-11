@@ -1,0 +1,53 @@
+form{
+  padding: 10px;
+}
+
+fieldset{
+  padding:5px;
+}
+
+input{
+  background-color: lightgray;
+}
+
+button{
+  background-color:darkgray;
+}
+
+main{
+  justify-content: center;
+  align-items: center;
+}
+
+@media only screen and (min-width: 768px){
+  body{
+    background-color: purple;
+  }
+}
+
+#edit{
+  display: none;
+}
+
+li{
+  border: 1px solid black;
+  justify-content: center;
+  align-content: center;
+  padding: 10px;
+}
+
+h4{
+  text-align: center;
+}
+
+img{
+  margin: auto;
+}
+
+#title{
+  font-weight: bolder;
+}
+
+#author{
+  font-style: italic;
+}
