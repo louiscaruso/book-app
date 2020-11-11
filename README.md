@@ -26,7 +26,6 @@
 - DEPLOYED TO HEROKU
 
 
-
 ## Change Log
 - Feature 01:
  - Number and name of feature: Feature 1  As a user, I want my application to load quickly so that I have an enjoyable experience.
