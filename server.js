@@ -19,8 +19,8 @@ const { response } = require('express');
 
 
 // Setting up application
+app.use(cors());
 app.set('view engine', 'ejs');
-
 app.use(express.static('./public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
@@ -34,7 +34,6 @@ const PORT = process.env.PORT || 3000;
 // Creating postgres client
 const client = new pg.Client(process.env.DATABASE_URL);
 
-
 // Route
 
 app.get('/', renderHome);
@@ -44,6 +43,7 @@ app.post('/books', addBookToDatabase);
 app.get('/books/:book_id', getOneBook);
 app.delete('/update/:book_id', deleteBook);
 app.get('*', handleError);
+
 
 function renderHome(req, res) {
   console.log('render home')
@@ -129,15 +129,13 @@ function collectFormInformation(req, res) {
     .then(data => {
       console.log(data.body.items[1]);
       const book = data.body.items;
-      const finalBookArray = book.map(books => new Book(books.volumeInfo));
-      res.render('pages/searches/show', { renderContent: finalBookArray });
-    })
-    .catch(error => {
-      console.log(error);
-      res.send('views/pages/pages/error');
+      const finalBookArray = finalBookArray.map(books => new Book(book.volumeInfo));
+      response.render('pages/searches/show', { renderContent: finalBookArray });
+      return new Book(books);
     });
 
 }
+
 
 //client.query)sql, safeValues);
 //response.status(200).redirect('/books/${id}');
@@ -152,15 +150,15 @@ function Book(book) {
   //splice method
   //
   console.log('url', URL);
-
 }
 
 
 
 
-function handleError(req, res) {
-  res.status(404).render('view/pages/pages/error');
-}
+  function handleError(req, res) {
+    res.status(404).render('view/pages/pages/error');
+  }
+
 
 client.connect()
   .then(() => {
