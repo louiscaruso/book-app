@@ -21,8 +21,7 @@ const { response } = require('express');
 // Setting up application
 app.use(cors());
 app.set('view engine', 'ejs');
-
-app.use(express.strict('/public'));
+app.use(express.static('./public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
@@ -31,7 +30,7 @@ app.use(methodOverride('_method'));
 // Declare port for server
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static('./public'));
+
 
 // Creating postgres client
 const client = new pg.Client(process.env.DATABASE_URL);
@@ -106,7 +105,7 @@ function addBookToDatabase(req, res) {
     });
 }
 
-function collectFormInformation(req, resp) {
+function collectFormInformation(req, res) {
   console.log(req.body);
   const searchQuery = req.body.searchQuery;
   const searchType = req.body.searchType;
