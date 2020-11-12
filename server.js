@@ -37,8 +37,8 @@ const client = new pg.Client(process.env.DATABASE_URL);
 // Route
 
 app.get('/', renderHome);
-app.get('/searchform', renderSearchForm);
-app.post('/ searches', collectFormInformation);
+app.get('/searches/new', renderSearchForm);
+app.post('/searches', collectFormInformation);
 app.post('/books', addBookToDatabase);
 app.get('/books/:book_id', getOneBook);
 app.delete('/update/:book_id', deleteBook);
@@ -46,12 +46,12 @@ app.get('*', handleError);
 
 
 function renderHome(req, res) {
-  console.log('render home')
+  console.log('render home');
   const sql = 'SELECT * FROM booktable;';
   return client.query(sql)
     .then(results => {
       console.log(results.rows);
-      res.status(200).render('pages/index', { renderedContent: allbook });
+      res.status(200).render('pages/index');
     })
     .catch((error) => {
       console.log(error);
@@ -98,7 +98,7 @@ function getOneBook(req, res) {
 
 
 function renderSearchForm(req, res) {
-  res.render('pages/searches/new.ejs');
+  res.render('searches/new.ejs');
 }
 
 function addBookToDatabase(req, res) {
@@ -129,9 +129,8 @@ function collectFormInformation(req, res) {
     .then(data => {
       console.log(data.body.items[1]);
       const book = data.body.items;
-      const finalBookArray = finalBookArray.map(books => new Book(book.volumeInfo));
-      response.render('pages/searches/show', { renderContent: finalBookArray });
-      return new Book(books);
+      const finalBookArray = book.map(books => new Book(books.volumeInfo));
+      res.render('searches/show', { renderContent: finalBookArray });
     });
 
 }
@@ -155,9 +154,9 @@ function Book(book) {
 
 
 
-  function handleError(req, res) {
-    res.status(404).render('view/pages/pages/error');
-  }
+function handleError(req, res) {
+  res.status(404).render('pages/error');
+}
 
 
 client.connect()
