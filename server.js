@@ -46,16 +46,16 @@ app.get('*', handleError);
 
 
 function renderHome(req, res) {
-  console.log('render home')
+  console.log('render home');
   const sql = 'SELECT * FROM booktable;';
   return client.query(sql)
     .then(results => {
       console.log(results.rows);
-      res.status(200).render('pages/index', { renderedContent: allbook });
+      res.status(200).render('pages/index');
     })
     .catch((error) => {
       console.log(error);
-      res.render('pages/error');
+      res.render('/views/pages/pages/error');
     });
 }
 
@@ -155,9 +155,9 @@ function Book(book) {
 
 
 
-  function handleError(req, res) {
-    res.status(404).render('view/pages/pages/error');
-  }
+function handleError(req, res) {
+  res.status(404).render('pages/error');
+}
 
 
 client.connect()
